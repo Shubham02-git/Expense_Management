@@ -1,0 +1,70 @@
+{
+  "name": "Expense Management System",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-18-bullseye",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "ms-vscode.js-debug-nightly",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-eslint",
+        "gruntfuggly.todo-tree",
+        "ms-vscode-remote.remote-containers"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": null,
+        "emmet.includeLanguages": {
+          "javascript": "javascriptreact",
+          "typescript": "typescriptreact"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [3000, 5000, 3306],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "5000": {
+      "label": "Backend (Express)",
+      "onAutoForward": "silent"
+    },
+    "3306": {
+      "label": "MySQL Database",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+
+  "remoteUser": "node",
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "BACKEND_URL": "http://localhost:5000",
+    "FRONTEND_URL": "http://localhost:3000"
+  },
+
+  "mounts": [
+    "source=expense-management-node-modules,target=/workspaces/Expense_Management/frontend/node_modules,type=volume",
+    "source=expense-management-backend-modules,target=/workspaces/Expense_Management/backend/node_modules,type=volume"
+  ]
+}

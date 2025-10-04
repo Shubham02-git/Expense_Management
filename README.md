@@ -2,7 +2,15 @@
 
 > **Complete digital expense management platform for Odoo Hackathon 2025**
 
-## 🚀 **Quick Start**
+## 🚀 **Quick Start Options**
+
+### 🌐 **Option 1: GitHub Codespaces (Zero Setup)**
+1. Go to [this repository](https://github.com/Shubham02-git/Expense_Management)
+2. Click **"Code"** → **"Codespaces"** → **"Create codespace on main"**
+3. Wait 2-3 minutes for automatic setup
+4. ✅ Ready to go! Access at `http://localhost:3000`
+
+### 💻 **Option 2: Local Development**
 
 ```bash
 # 1. Install dependencies
