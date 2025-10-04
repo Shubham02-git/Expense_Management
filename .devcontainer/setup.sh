@@ -22,15 +22,15 @@ echo "⚙️ Setting up environment files..."
 # Backend .env
 if [ ! -f "/workspaces/Expense_Management/backend/.env" ]; then
   cat > /workspaces/Expense_Management/backend/.env << EOL
-# Database Configuration
-DB_HOST=localhost
+# Database Configuration (Codespaces MySQL)
+DB_HOST=127.0.0.1
 DB_USER=root
 DB_PASSWORD=password
 DB_NAME=expense_management
 DB_PORT=3306
 
 # JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
+JWT_SECRET=your_super_secret_jwt_key_for_codespaces_demo_change_in_production
 JWT_EXPIRES_IN=7d
 
 # Server Configuration
@@ -55,7 +55,7 @@ SMTP_USER=your_email@gmail.com
 SMTP_PASS=your_password
 EMAIL_FROM=your_email@gmail.com
 EOL
-  echo "✅ Created backend .env file"
+  echo "✅ Created backend .env file with Codespaces database config"
 fi
 
 # Frontend .env.local
@@ -81,6 +81,26 @@ git config --global --add safe.directory /workspaces/Expense_Management
 
 # Create uploads directory
 mkdir -p /workspaces/Expense_Management/backend/uploads
+
+# Wait for MySQL to be ready
+echo "⏳ Waiting for MySQL database to be ready..."
+for i in {1..30}; do
+  if mysqladmin ping -h127.0.0.1 -uroot -ppassword --silent; then
+    echo "✅ MySQL database is ready!"
+    break
+  fi
+  echo "   Attempt $i/30: MySQL not ready yet, waiting..."
+  sleep 2
+done
+
+# Test database connection
+echo "🔗 Testing database connection..."
+if mysql -h127.0.0.1 -uroot -ppassword -e "SHOW DATABASES;" 2>/dev/null; then
+  echo "✅ Database connection successful!"
+else
+  echo "⚠️ Database connection failed - setting up demo mode"
+  bash /workspaces/Expense_Management/.devcontainer/setup-demo.sh
+fi
 
 echo "✅ Setup complete! Ready to start development."
 echo ""

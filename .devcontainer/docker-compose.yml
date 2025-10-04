@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:1-18-bullseye
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    network_mode: service:mysql
+    depends_on:
+      - mysql
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=127.0.0.1
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=expense_management
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: expense_management
+      MYSQL_USER: expense_user
+      MYSQL_PASSWORD: expense_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
+
+volumes:
+  mysql-data:

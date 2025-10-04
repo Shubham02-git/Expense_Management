@@ -8,15 +8,33 @@ check_port() {
     return $?
 }
 
-# Start MySQL if not running (for demo purposes)
-if ! check_port 3306; then
-    echo "🗄️ MySQL not detected. Consider setting up a database for full functionality."
+# Check and wait for MySQL
+echo "🗄️ Checking MySQL database connectivity..."
+if mysqladmin ping -h127.0.0.1 -uroot -ppassword --silent 2>/dev/null; then
+    echo "✅ MySQL database is running and accessible"
+else
+    echo "⚠️ MySQL database not accessible. Backend may run in demo mode."
+    echo "   Database will be available once MySQL container starts up."
 fi
 
 # Start backend in background
 echo "🚀 Starting backend server..."
 cd /workspaces/Expense_Management/backend
-npm run dev > /tmp/backend.log 2>&1 &
+
+# Try to start normal backend first, fallback to demo mode
+if mysqladmin ping -h127.0.0.1 -uroot -ppassword --silent 2>/dev/null; then
+  echo "   Using full backend with database"
+  npm run dev > /tmp/backend.log 2>&1 &
+else
+  echo "   Using demo backend (no database required)"
+  if [ -f "demo-server.js" ]; then
+    npm run demo > /tmp/backend.log 2>&1 &
+  else
+    echo "   Demo mode not available, trying regular backend anyway"
+    npm run dev > /tmp/backend.log 2>&1 &
+  fi
+fi
+
 BACKEND_PID=$!
 
 # Wait a moment for backend to start
