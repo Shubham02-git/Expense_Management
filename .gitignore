@@ -1,0 +1,98 @@
+# Expense Management System
+
+# Dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# Build outputs
+build/
+dist/
+.next/
+out/
+
+# Database
+*.sqlite
+*.db
+database/backups/
+
+# Uploads and user files
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/public/uploads/
+frontend/public/receipts/
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+.temp/
+.nyc_output/
+coverage/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+tmp/
+temp/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Package manager
+.npm/
+.yarn/
+.pnp/
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production deployment
+.vercel/
+.netlify/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Misc
+*.tgz
+*.tar.gz
+*.zip
+*.rar
