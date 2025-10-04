@@ -112,7 +112,7 @@ export default function Home() {
             </div>
 
             <div className="text-center text-xs text-gray-500">
-              Built with Next.js + Node.js + PostgreSQL
+              Built with Next.js + Node.js + MySQL
               <br />
               <a 
                 href="https://github.com/your-repo" 

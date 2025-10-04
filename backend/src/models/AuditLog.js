@@ -42,16 +42,19 @@ const AuditLog = sequelize.define('AuditLog', {
     }
   },
   old_values: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: true
   },
   new_values: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: true
   },
   ip_address: {
-    type: DataTypes.INET,
-    allowNull: true
+    type: DataTypes.STRING(45), // Support both IPv4 and IPv6
+    allowNull: true,
+    validate: {
+      isIP: true
+    }
   },
   user_agent: {
     type: DataTypes.TEXT,

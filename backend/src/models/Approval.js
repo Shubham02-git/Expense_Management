@@ -73,8 +73,8 @@ const Approval = sequelize.define('Approval', {
     allowNull: true
   },
   metadata: {
-    type: DataTypes.JSONB,
-    defaultValue: {},
+    type: DataTypes.JSON,
+    defaultValue: '{}',
     comment: 'Additional approval context data'
   }
 }, {

@@ -28,20 +28,20 @@ const ApprovalWorkflow = sequelize.define('ApprovalWorkflow', {
     }
   },
   conditions: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: false,
-    defaultValue: {
+    defaultValue: JSON.stringify({
       amount_threshold: null,
       categories: [],
       departments: [],
       user_roles: []
-    },
+    }),
     comment: 'Conditions that trigger this workflow'
   },
   steps: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: '[]',
     comment: 'Array of approval steps with rules'
   },
   is_active: {

@@ -66,14 +66,14 @@ const Company = sequelize.define('Company', {
     allowNull: true
   },
   settings: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: true,
-    defaultValue: {
+    defaultValue: JSON.stringify({
       approval_threshold: 1000,
       require_receipts: true,
       auto_approve_under: 50,
       notification_enabled: true
-    }
+    })
   },
   is_active: {
     type: DataTypes.BOOLEAN,

@@ -100,7 +100,7 @@ const Expense = sequelize.define('Expense', {
     allowNull: true
   },
   ocr_data: {
-    type: DataTypes.JSONB,
+    type: DataTypes.JSON,
     allowNull: true,
     comment: 'Store OCR extracted data for audit purposes'
   },
@@ -133,12 +133,13 @@ const Expense = sequelize.define('Expense', {
     defaultValue: 0.00
   },
   tags: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
-    defaultValue: []
+    type: DataTypes.JSON,
+    defaultValue: '[]',
+    comment: 'Array of tags stored as JSON'
   },
   metadata: {
-    type: DataTypes.JSONB,
-    defaultValue: {},
+    type: DataTypes.JSON,
+    defaultValue: '{}',
     comment: 'Additional flexible data storage'
   }
 }, {

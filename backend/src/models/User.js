@@ -96,8 +96,8 @@ const User = sequelize.define('User', {
     defaultValue: true
   },
   preferences: {
-    type: DataTypes.JSONB,
-    defaultValue: {
+    type: DataTypes.JSON,
+    defaultValue: JSON.stringify({
       notifications: {
         email: true,
         push: true,
@@ -109,7 +109,7 @@ const User = sequelize.define('User', {
         default_view: 'overview',
         items_per_page: 10
       }
-    }
+    })
   }
 }, {
   tableName: 'users',
