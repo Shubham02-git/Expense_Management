@@ -37,8 +37,8 @@ interface RegisterData {
   country?: string
 }
 
-// Configure axios defaults
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+// Configure axios defaults for Next.js API routes
+const API_BASE_URL = '/api' // Use Next.js API routes instead of direct backend calls
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ isLoading: true })
           
-          const response = await api.post('/api/auth/login', {
+          const response = await api.post('/auth/login', {
             email,
             password,
           })
@@ -104,7 +104,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ isLoading: true })
           
-          const response = await api.post('/api/auth/register', data)
+          const response = await api.post('/auth/register', data)
 
           const { user, token } = response.data.data
           

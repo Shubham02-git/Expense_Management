@@ -7,7 +7,8 @@ const axios = require('axios');
 // GET /api/external/countries - Get countries with currencies (public)
 router.get('/countries', async (req, res) => {
   try {
-    const response = await axios.get('https://restcountries.com/v3.1/all?fields=name,currencies,cca2,flag');
+    const countriesUrl = process.env.COUNTRIES_API_URL || 'https://restcountries.com/v3.1/all?fields=name,currencies,cca2,flag';
+    const response = await axios.get(countriesUrl);
     
     const countries = response.data.map(country => ({
       name: country.name.common,
@@ -35,6 +36,74 @@ router.get('/countries', async (req, res) => {
   }
 });
 
+// GET /api/external/currencies - Get list of currencies (public)
+router.get('/currencies', async (req, res) => {
+  console.log('🌍 Currencies endpoint called');
+  try {
+    const countriesUrl = process.env.COUNTRIES_API_URL || 'https://restcountries.com/v3.1/all?fields=currencies';
+    console.log('📡 Fetching from external API:', countriesUrl);
+    
+    // Add timeout to prevent hanging requests
+    const response = await axios.get(countriesUrl, {
+      timeout: 10000, // 10 second timeout
+      headers: {
+        'User-Agent': 'ExpenseManagement/1.0'
+      }
+    });
+    
+    console.log('✅ External API response received, processing currencies...');
+    
+    const currencySet = new Set();
+    const currencies = [];
+    
+    response.data.forEach(country => {
+      if (country.currencies) {
+        Object.entries(country.currencies).forEach(([code, currency]) => {
+          if (!currencySet.has(code)) {
+            currencySet.add(code);
+            currencies.push({
+              code,
+              name: currency.name,
+              symbol: currency.symbol || code
+            });
+          }
+        });
+      }
+    });
+    
+    currencies.sort((a, b) => a.code.localeCompare(b.code));
+    console.log(`💰 Processed ${currencies.length} currencies from external API`);
+
+    res.json({
+      data: {
+        currencies
+      }
+    });
+  } catch (error) {
+    console.error('❌ Currencies API error:', error.message);
+    
+    // Provide fallback currencies if external API fails
+    const fallbackCurrencies = [
+      { code: 'USD', name: 'US Dollar', symbol: '$' },
+      { code: 'EUR', name: 'Euro', symbol: '€' },
+      { code: 'GBP', name: 'British Pound', symbol: '£' },
+      { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+      { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+      { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+      { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+      { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+      { code: 'INR', name: 'Indian Rupee', symbol: '₹' }
+    ];
+    
+    console.log('🔄 Using fallback currencies due to external API failure');
+    res.json({
+      data: {
+        currencies: fallbackCurrencies
+      }
+    });
+  }
+});
+
 // GET /api/external/exchange-rates/:currency - Get exchange rates
 router.get('/exchange-rates/:currency', async (req, res) => {
   try {
@@ -48,7 +117,8 @@ router.get('/exchange-rates/:currency', async (req, res) => {
       });
     }
 
-    const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/${currency.toUpperCase()}`);
+    const baseUrl = process.env.EXCHANGE_RATE_API_URL || 'https://api.exchangerate-api.com/v4/latest';
+    const response = await axios.get(`${baseUrl}/${currency.toUpperCase()}`);
     
     res.json({
       data: {
@@ -103,7 +173,8 @@ router.get('/convert', async (req, res) => {
       });
     }
 
-    const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/${from.toUpperCase()}`);
+    const baseUrl = process.env.EXCHANGE_RATE_API_URL || 'https://api.exchangerate-api.com/v4/latest';
+    const response = await axios.get(`${baseUrl}/${from.toUpperCase()}`);
     const rate = response.data.rates[to.toUpperCase()];
     
     if (!rate) {

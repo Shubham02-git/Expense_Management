@@ -136,7 +136,8 @@ const updateCompany = async (req, res) => {
     let currencyInfo = {};
     if (currency && currency !== company.currency) {
       try {
-        const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/${currency}`);
+        const baseUrl = process.env.EXCHANGE_RATE_API_URL || 'https://api.exchangerate-api.com/v4/latest';
+        const response = await axios.get(`${baseUrl}/${currency}`);
         if (!response.data.rates) {
           return res.status(400).json({
             error: {

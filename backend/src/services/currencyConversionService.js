@@ -265,4 +265,4 @@ class CurrencyConversionService {
 }
 
 // Export singleton instance
-module.exports = new CurrencyConversionService();
+module.exports = CurrencyConversionService;

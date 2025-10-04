@@ -51,6 +51,7 @@ app.use('/api/companies', require('./src/routes/companies'));
 app.use('/api/currencies', require('./src/routes/currencies'));
 app.use('/api/conversion', require('./src/routes/conversion'));
 app.use('/api/expenses', require('./src/routes/expenses'));
+app.use('/api/expense-categories', require('./src/routes/expenseCategories'));
 app.use('/api/approvals', require('./src/routes/approvals'));
 app.use('/api/reports', require('./src/routes/reports'));
 app.use('/api/external', require('./src/routes/external'));
@@ -90,10 +91,11 @@ const startServer = async () => {
     await testConnection();
     await syncDatabase(false);
     
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+      console.log(`🔗 Server accessible at: http://localhost:${PORT}, http://127.0.0.1:${PORT}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

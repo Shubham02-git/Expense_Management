@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { useAuth } from '../components/AuthProvider'
 
 interface ServerStatus {
   status: string
@@ -9,8 +11,16 @@ interface ServerStatus {
 export default function Home() {
   const [serverStatus, setServerStatus] = useState<ServerStatus | null>(null)
   const [loading, setLoading] = useState(true)
+  const { isAuthenticated, user, isLoading } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
+    // If user is authenticated, redirect to dashboard
+    if (!isLoading && isAuthenticated) {
+      router.push('/dashboard')
+      return
+    }
+
     const checkServerStatus = async () => {
       try {
         const response = await fetch('http://localhost:5000/health')
@@ -23,8 +33,34 @@ export default function Home() {
       }
     }
 
-    checkServerStatus()
-  }, [])
+    if (!isAuthenticated) {
+      checkServerStatus()
+    }
+  }, [isAuthenticated, isLoading, router])
+
+  // Show loading while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-sm text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If authenticated, this will redirect - but show loading in case
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-sm text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -93,6 +129,12 @@ export default function Home() {
                   onClick={() => window.location.href = '/login'}
                 >
                   Login to Dashboard
+                </button>
+                <button
+                  className="w-full flex justify-center py-2 px-4 border border-purple-300 rounded-md shadow-sm text-sm font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  onClick={() => window.location.href = '/test-login'}
+                >
+                  🚀 View Interactive System Demo
                 </button>
               </div>
             </div>

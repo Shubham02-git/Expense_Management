@@ -3,38 +3,38 @@ const router = express.Router();
 
 const { authenticate, authorize } = require('../middleware/auth');
 const { validateApproval, validateUUID, validatePagination } = require('../middleware/validation');
+const {
+  getPendingApprovals,
+  getApprovalById,
+  approveExpense,
+  rejectExpense,
+  bulkApproveExpenses,
+  getApprovalStats,
+  delegateApproval
+} = require('../controllers/approvalController');
 
 // All approval routes require authentication
 router.use(authenticate);
 
+// GET /api/approvals/stats - Get approval statistics (must be before /:id route)
+router.get('/stats', getApprovalStats);
+
 // GET /api/approvals - List pending approvals for current user
-router.get('/', validatePagination, async (req, res) => {
-  // TODO: Implement pending approvals listing
-  res.json({ message: 'Pending approvals endpoint - to be implemented' });
-});
+router.get('/', validatePagination, getPendingApprovals);
 
 // GET /api/approvals/:id - Get specific approval
-router.get('/:id', validateUUID, async (req, res) => {
-  // TODO: Implement get approval by ID
-  res.json({ message: 'Get approval by ID endpoint - to be implemented' });
-});
+router.get('/:id', validateUUID, getApprovalById);
 
 // POST /api/approvals/:id/approve - Approve expense
-router.post('/:id/approve', validateUUID, validateApproval, async (req, res) => {
-  // TODO: Implement expense approval
-  res.json({ message: 'Approve expense endpoint - to be implemented' });
-});
+router.post('/:id/approve', validateUUID, validateApproval, approveExpense);
 
 // POST /api/approvals/:id/reject - Reject expense
-router.post('/:id/reject', validateUUID, validateApproval, async (req, res) => {
-  // TODO: Implement expense rejection
-  res.json({ message: 'Reject expense endpoint - to be implemented' });
-});
+router.post('/:id/reject', validateUUID, validateApproval, rejectExpense);
 
-// POST /api/approvals/:id/escalate - Escalate approval
-router.post('/:id/escalate', validateUUID, async (req, res) => {
-  // TODO: Implement approval escalation
-  res.json({ message: 'Escalate approval endpoint - to be implemented' });
-});
+// POST /api/approvals/:id/delegate - Delegate approval to another user
+router.post('/:id/delegate', validateUUID, delegateApproval);
+
+// POST /api/approvals/bulk/approve - Bulk approve expenses
+router.post('/bulk/approve', bulkApproveExpenses);
 
 module.exports = router;
