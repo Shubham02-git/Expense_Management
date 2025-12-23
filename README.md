@@ -145,9 +145,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 **Support**
 
-- 📧 **Email**: support@expense-management.com
-- 💬 **Discord**: [Join Community](https://discord.gg/expense-mgmt)
-- 📖 **Docs**: [Full Documentation](./SETUP_GUIDE.md)
+- 📧 **Email**: shbd.work@gmail.com
 - 🐛 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
 
 ---
